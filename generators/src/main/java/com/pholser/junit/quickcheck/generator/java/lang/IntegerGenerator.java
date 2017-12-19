@@ -65,8 +65,19 @@ public class IntegerGenerator extends IntegralGenerator<Integer> {
         max = range.max().isEmpty() ? range.maxInt() : Integer.parseInt(range.max());
     }
 
+    private final static double GROWTH_FACTOR = 1.05;
+    private double range = 1;
+ 
+    private void grow() {
+	 	     range = range * GROWTH_FACTOR;
+	   }
+ 
     @Override public Integer generate(SourceOfRandomness random, GenerationStatus status) {
-        return random.nextInt(min, max);
+        int lowerBound = Math.max((int) -range, min);
+      		int upperBound = Math.min((int) range, max);
+		      int nextInt = random.nextInt(lowerBound, upperBound);
+		      grow();
+		      return nextInt;
     }
 
     @Override protected Function<BigInteger, Integer> narrow() {
